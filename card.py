@@ -2,23 +2,23 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/18/21, 11:09 AM
+#  Date: 9/18/21, 2:45 PM
 import json
 
 
 class Card:
     def __init__(self, j:json):
-        self.name = j["name"].replace(",", "")
-        self.rarity = j["rarity"]
-        self.id = j["id"]
-        self.uri = j["scryfall_uri"]
-        self.lang = j["lang"]
+        self.name = j["name"].replace(",", "").strip()
+        self.rarity = j["rarity"].strip()
+        self.id = j["id"].strip()
+        self.uri = j["scryfall_uri"].strip()
+        self.lang = j["lang"].strip()
         self.super_type, self.type, self.sub_type = self.split_types(j["type_line"])
         self.foil = j["foil"]
         self.nonfoil = j["nonfoil"]
-        self.set_name = j["set_name"]
+        self.set_name = j["set_name"].strip()
         self.collector_number = j["collector_number"]
-        self.artist = j["artist"].replace(",", "")
+        self.artist = j["artist"].replace(",", "").strip()
 
         try:
             self.illustration_id = j["illustration_id"]
@@ -62,14 +62,14 @@ class Card:
         split_hyphen = [x.strip() for x in split_hyphen]
 
         if len(split_hyphen) == 1:
-            return None, split_hyphen[0], None
+            return None, split_hyphen[0].strip(), None
         else:
             split_spaces = split_hyphen[0].split(" ")
 
             if len(split_spaces) == 1:
-                return None, split_spaces[0], split_hyphen[1]
+                return None, split_spaces[0].strip(), split_hyphen[1].strip()
             else:
-                return split_spaces[0], split_spaces[1], split_hyphen[1]
+                return split_spaces[0].strip(), split_spaces[1].strip(), split_hyphen[1].strip()
 
     # @classmethod
     # def from_json(cls, j):
