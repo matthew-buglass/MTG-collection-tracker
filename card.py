@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/18/21, 2:45 PM
+#  Date: 9/18/21, 4:15 PM
 import json
 
 
@@ -31,14 +31,14 @@ class Card:
         self.price_etched_usd = j["prices"]["usd_etched"]
 
     def get_csv_line(self) -> str:
-        return "{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}\n".format(
+        return "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
             self.name, self.rarity, self.id, self.uri, self.lang, self.super_type, self.type,
             self.sub_type, self.foil, self.nonfoil, self.set_name, self.collector_number, self.artist,
             self.illustration_id, self.booster, self.price_usd, self.price_foil_usd, self.price_etched_usd)
 
     def get_csv_header(self) -> str:
-        return "name, rarity, id, uri, lang, super_type, type, sub_type, foil, nonfoil, set_name, " \
-               "collector_number, artist, illustration_id, booster, price_usd, price_foil_usd, " \
+        return "name,rarity,id,uri,lang,super_type,type,sub_type,foil,nonfoil,set_name," \
+               "collector_number,artist,illustration_id,booster,price_usd,price_foil_usd," \
                "price_etched_usd\n"
 
     def print_string(self):
