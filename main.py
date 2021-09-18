@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/18/21, 10:43 AM
+#  Date: 9/18/21, 11:05 AM
 import json
 
 import requests
@@ -21,7 +21,7 @@ def get_default_cards():
     if response.status_code == 200:
         print("successfully retrieved bulk data.")
         response_json = response.json()
-        date = response_json["updated_at"]
+        date = response_json["updated_at"].replace(".", "_").replace(":", "-")
 
         card_response = requests.get(response_json["download_uri"])
 
@@ -51,8 +51,8 @@ if __name__ == '__main__':
     cards, date = get_default_cards()
     header = cards[0].get_csv_header()
 
-    with open("mtg_card_data_"+date+".csv", "w+") as f:
-        f.write(header + "\n")
+    with open("price_data\\mtg_card_data_"+date+".csv", "w+", encoding="utf-8") as f:
+        f.write(header)
 
         for c in cards:
             f.write(c.get_csv_line())

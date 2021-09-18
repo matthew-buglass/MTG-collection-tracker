@@ -2,16 +2,16 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/18/21, 10:43 AM
+#  Date: 9/18/21, 11:05 AM
 import json
 
 
 class Card:
     def __init__(self, j:json):
-        self.name = j["name"]
+        self.name = j["name"].replace(",", "")
         self.rarity = j["rarity"]
         self.id = j["id"]
-        self.uri = j["uri"]
+        self.uri = j["scryfall_uri"]
         self.lang = j["lang"]
         self.super_type, self.type, self.sub_type = self.split_types(j["type_line"])
         self.foil = j["foil"]
@@ -19,7 +19,12 @@ class Card:
         self.set_name = j["set_name"]
         self.collector_number = j["collector_number"]
         self.artist = j["artist"]
-        self.illustration_id = j["illustration_id"]
+
+        try:
+            self.illustration_id = j["illustration_id"]
+        except KeyError:
+            self.illustration_id = None
+
         self.booster = j["booster"]
         self.price_usd = j["prices"]["usd"]
         self.price_foil_usd = j["prices"]["usd_foil"]
@@ -46,6 +51,13 @@ class Card:
         :param type_line: the line type of the creature
         :return: (str, str, str): (super-type, type, sub-type)
         """
+        if ("//" in type_line):
+            split_faces = type_line.split("//")
+            backside = split_faces[1].strip()
+            back_item = backside.split("—")[-1].strip()
+
+            type_line = split_faces[0] + "// " + back_item
+
         split_hyphen = type_line.split("—")
         split_hyphen = [x.strip() for x in split_hyphen]
 
