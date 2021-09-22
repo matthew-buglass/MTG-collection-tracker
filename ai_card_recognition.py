@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 5:48 PM
+#  Date: 9/22/21, 5:58 PM
 
 # BIG NOTE: The rule of not feeding your entire dataset is being broken here. This is because
 # that rule exists for when you are training on a sample and extrapolating out into a population.
@@ -46,6 +46,8 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
     count = 0
     msg = ""
     error_log = ["Error log:"]
+    t1 = time.time()
+
     print("\n\n ----------- Getting Card Images:  -----------")
 
     for c in card_list:
@@ -106,7 +108,19 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
 
         count += 1
         # last_size = print_loading_progress(last_size, msg, count, entries)
-        printProgressBar(count, entries, "Progress: {:,} of {:,}".format(count, entries), suffix=c.id, length=50)
+
+        # estimating the time left
+        t2 = time.time()
+        avg_time = float(t2 - t1) / float(count)
+        remaining_cards = entries - count
+        seconds_remaining = avg_time * remaining_cards
+        hrs = seconds_remaining // 3600
+        mins = (seconds_remaining % 3600) // 60
+        secs = (seconds_remaining % 3600) / 60.0
+
+        printProgressBar(count, entries, "Progress: {:,} of {:,}".format(count, entries),
+                         suffix="Estimated Time Remaining: {}:{}:{:.2f} - ID: {}".format(hrs, mins, secs, c.id),
+                         length=50)
 
         # time.sleep(delay/1000.0)
     print("\n\n ----------- Error Log -----------\n{}".format("\n".join(error_log)))
