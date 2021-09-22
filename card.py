@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 10:19 AM
+#  Date: 9/22/21, 11:27 AM
 import json
 
 
@@ -19,7 +19,16 @@ class Card:
         self.set_name = j["set_name"].strip()
         self.collector_number = j["collector_number"]
         self.artist = j["artist"].replace(",", "").strip()
-        self.image_uris = j["image_uris"]
+        try:
+            self.image_uris = j["image_uris"]
+        except KeyError:
+            print("No image uri for {}".format(self.name))
+            self.image_uris = { "small": None,
+                                "normal": None,
+                                "large": None,
+                                "png": None,
+                                "art_crop": None,
+                                "border_crop": None}
 
         try:
             self.illustration_id = j["illustration_id"]

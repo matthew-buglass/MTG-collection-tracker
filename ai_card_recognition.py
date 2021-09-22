@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 10:19 AM
+#  Date: 9/22/21, 11:27 AM
 
 # BIG NOTE: The rule of not feeding your entire dataset is being broken here. This is because
 # that rule exists for when you are training on a sample and extrapolating out into a population.
@@ -37,15 +37,32 @@ def download_small_images(card_list: list[card.Card]):
     """
     delay = 105    # ms delay between each call to avoid overloading the API
 
-    for c in card_list[0:15]:
-        image_uri = c.image_uris["small"]
+    for c in card_list:
+        img_response = requests.get("https://c1.scryfall.com/file/scryfall-cards/small/front/{}/{}/{}.jpg".format(
+            c.id[0],
+            c.id[1],
+            c.id))
 
-        img_data = requests.get(image_uri).content
-        with open("images/small/" + c.id + ".jpg", "wb") as img:
-            img.write(img_data)
-            img.close()
+        if img_response.status_code == 429:
+            print("Too many requests. Sleeping for 2 seconds")
+            time.sleep(2)
+            img_response = requests.get("https://c1.scryfall.com/file/scryfall-cards/small/front/{}/{}/{}.jpg".format(
+                c.id[0],
+                c.id[1],
+                c.id))
 
-        time.sleep(delay/1000.0)
+        if img_response.status_code == 200:
+            img_data = img_response.content
+            with open("images/small/" + c.id + ".jpg", "wb") as img:
+                img.write(img_data)
+                img.close()
+                print("Wrote {} small image to file".format(c.name))
+        else:
+            print("\n---------------  Got code {} while getting image for {}. Skipping ---------------\n".format(
+                img_response.status_code,
+                c.name))
+
+        # time.sleep(delay/1000.0)
 
 
 def prepare_data(card_list):
@@ -55,3 +72,8 @@ def prepare_data(card_list):
     :param card_list: list of card objects
     :return: A
     """
+    print("preparing data")
+    
+if __name__ == '__main__':
+    cards = main.get_default_cards()
+    download_small_images(cards[0])
