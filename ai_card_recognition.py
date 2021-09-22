@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 12:52 PM
+#  Date: 9/22/21, 12:56 PM
 
 # BIG NOTE: The rule of not feeding your entire dataset is being broken here. This is because
 # that rule exists for when you are training on a sample and extrapolating out into a population.
@@ -25,6 +25,7 @@ import numpy as np
 import os
 import PIL
 import tensorflow as tf
+import ssl
 
 from tensorflow import keras
 from tensorflow.keras import layers
