@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/18/21, 4:15 PM
+#  Date: 9/22/21, 10:19 AM
 import json
 
 
@@ -19,6 +19,7 @@ class Card:
         self.set_name = j["set_name"].strip()
         self.collector_number = j["collector_number"]
         self.artist = j["artist"].replace(",", "").strip()
+        self.image_uris = j["image_uris"]
 
         try:
             self.illustration_id = j["illustration_id"]
