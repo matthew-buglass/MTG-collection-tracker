@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 5:41 PM
+#  Date: 9/22/21, 5:44 PM
 
 # BIG NOTE: The rule of not feeding your entire dataset is being broken here. This is because
 # that rule exists for when you are training on a sample and extrapolating out into a population.
@@ -46,6 +46,7 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
     count = 0
     msg = ""
     error_log = ["Error log:"]
+    print("\n\n ----------- Getting Card Images:  -----------")
 
     for c in card_list:
         filename = "images\\small\\" + c.id + ".jpg"
@@ -105,7 +106,7 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
 
         count += 1
         # last_size = print_loading_progress(last_size, msg, count, entries)
-        printProgressBar(count, entries, "Progress: {:,} of {:,}".format(count, entries), length=50)
+        printProgressBar(count, entries, "Progress: {:,} of {:,}".format(count, entries), suffix=msg, length=50)
 
         # time.sleep(delay/1000.0)
 
