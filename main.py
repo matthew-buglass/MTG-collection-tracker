@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 8:38 AM
+#  Date: 9/22/21, 5:41 PM
 import json
 
 import requests
@@ -31,7 +31,7 @@ def get_default_cards():
             print("{} cards found".format("{:,}".format(len(card_json))))
             card_response.close()
 
-            print(json.dumps(card_json[3], indent=4))
+            # print(json.dumps(card_json[3], indent=4))
 
             card_list = []
 

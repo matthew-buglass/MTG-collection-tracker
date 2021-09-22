@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 11:27 AM
+#  Date: 9/22/21, 5:41 PM
 import json
 
 
@@ -22,7 +22,6 @@ class Card:
         try:
             self.image_uris = j["image_uris"]
         except KeyError:
-            print("No image uri for {}".format(self.name))
             self.image_uris = { "small": None,
                                 "normal": None,
                                 "large": None,
