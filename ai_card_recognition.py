@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 6:15 PM
+#  Date: 9/23/21, 11:16 AM
 
 # BIG NOTE: The rule of not feeding your entire dataset is being broken here. This is because
 # that rule exists for when you are training on a sample and extrapolating out into a population.
@@ -26,12 +26,25 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import PIL
-import tensorflow as tf
+# import tensorflow as tf
 
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
+class RollingQueue:
+    def init(self):
+        self.max_queue = 100
+        self.queue = []
+
+    def enqueue(self, value):
+        if len(self.queue) == self.max_queue:
+            self.queue = self.queue[1:]
+
+        self.queue.append(value)
+
+    def get_avg(self):
+        return self.queue.sum() / len(self.queue)
 
 def download_small_images(card_list: list[card.Card], all_new: bool):
     """
@@ -46,11 +59,12 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
     count = 0
     msg = ""
     error_log = ["Error log:"]
-    t1 = time.time()
+    times = RollingQueue()
 
     print("\n\n ----------- Getting Card Images:  -----------")
 
     for c in card_list:
+        t1 = time.time()
         filename = "images\\small\\" + c.id + ".jpg"
 
         ids_present = [f.rstrip(".jpg") for f in listdir(my_path + "\\images\\small\\")]
@@ -111,7 +125,8 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
 
         # estimating the time left
         t2 = time.time()
-        avg_time = float(t2 - t1) / float(count)
+        times.enqueue(t2-t1)
+        avg_time = times.get_avg()
         remaining_cards = entries - count
         seconds_remaining = avg_time * remaining_cards
         hrs = seconds_remaining // 3600
