@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/23/21, 12:16 PM
+#  Date: 9/23/21, 3:58 PM
 
 # BIG NOTE: The rule of not feeding your entire dataset is being broken here. This is because
 # that rule exists for when you are training on a sample and extrapolating out into a population.
@@ -11,6 +11,7 @@
 #
 # Additionally we are not trying to generalize predictions. Because each card entry is unique, from name, art,
 # artist, release yer, edition number, etc. We want to be able to recognize and classify the exact card.
+import shutil
 import ssl
 import sys
 import time
@@ -60,6 +61,7 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
     msg = ""
     error_log = ["Error log:"]
     times = RollingQueue()
+    ids_present = [f.rstrip(".jpg") for f in listdir(my_path + "\\images\\small\\")]
 
     print("\n\n ----------- Getting Card Images:  -----------")
 
@@ -67,7 +69,7 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
         t1 = time.time()
         filename = "images\\small\\" + c.id + ".jpg"
 
-        ids_present = [f.rstrip(".jpg") for f in listdir(my_path + "\\images\\small\\")]
+
 
         if c.id not in ids_present or all_new:
             try:
@@ -141,6 +143,41 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
     print("\n\n ----------- Error Log -----------\n{}".format("\n".join(error_log)))
 
 
+def organize_small_image_directory():
+    """
+    Takes all the images in the small directory and puts them into their class folders. This allows
+    for easy data set creation with tf.keras.utils.image_dataset_from_directory
+    :return: None
+    """
+    my_path = os.path.dirname(os.path.abspath("top_level_file.txt"))
+
+    # getting the image names from the small directory
+    ids_present = [f.rstrip(".jpg") for f in listdir(my_path + "\\images\\small\\") if f.endswith(".jpg")]
+
+    # loading bar data
+    count = 0
+    entries = len(ids_present)
+
+    # creating new folders and moving the files
+    print("\n\n ----------- Arranging Directories:  -----------")
+    for card_id in ids_present:
+        folder_name = "class_" + card_id
+        try:
+            os.mkdir(os.path.join(my_path, "images", "small", folder_name))
+        except FileExistsError:
+            pass
+
+        path_to_old = "{}{}{}.jpg".format(my_path, "\\images\\small\\", card_id)
+        path_to_new = "{}{}\\{}\\{}_image_1.jpg".format(my_path, "\\images\\small", folder_name, card_id)
+        os.rename(path_to_old, path_to_new)
+
+        # updating progress
+        count += 1
+        printProgressBar(count, entries, "Progress: {:,} of {:,}".format(count, entries),
+                         suffix=" - ID: {}".format(card_id),
+                         length=50)
+
+
 def print_loading_progress(last_len, msg, complete, total):
     loading_bar_len = 50
     progress = float(complete) / float(total)
@@ -191,5 +228,6 @@ def prepare_data(card_list):
     print("preparing data")
     
 if __name__ == '__main__':
-    cards = main.get_default_cards()
-    download_small_images(cards[0], False)
+    # cards = main.get_default_cards()
+    # download_small_images(cards[0], False)
+    organize_small_image_directory()
