@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/22/21, 6:05 PM
+#  Date: 9/22/21, 6:11 PM
 
 # BIG NOTE: The rule of not feeding your entire dataset is being broken here. This is because
 # that rule exists for when you are training on a sample and extrapolating out into a population.
@@ -116,7 +116,7 @@ def download_small_images(card_list: list[card.Card], all_new: bool):
         seconds_remaining = avg_time * remaining_cards
         hrs = seconds_remaining // 3600
         mins = (seconds_remaining % 3600) // 60
-        secs = (seconds_remaining % 3600) / 60.0
+        secs = (seconds_remaining % 3600) % 60
 
         printProgressBar(count, entries, "Progress: {:,} of {:,}".format(count, entries),
                          suffix="Estimated Time Remaining: {:2d}:{:2d}:{:.2f} - ID: {}".format(int(hrs), int(mins), secs, c.id),
