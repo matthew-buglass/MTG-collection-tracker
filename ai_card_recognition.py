@@ -2,7 +2,7 @@
 #  Author: Matthew Buglass
 #  Maintainer: Matthew Buglass
 #  Website: matthewbuglass.com
-#  Date: 9/23/21, 11:16 AM
+#  Date: 9/23/21, 12:16 PM
 
 # BIG NOTE: The rule of not feeding your entire dataset is being broken here. This is because
 # that rule exists for when you are training on a sample and extrapolating out into a population.
@@ -33,8 +33,8 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
 class RollingQueue:
-    def init(self):
-        self.max_queue = 100
+    def __init__(self):
+        self.max_queue = 400
         self.queue = []
 
     def enqueue(self, value):
@@ -44,7 +44,7 @@ class RollingQueue:
         self.queue.append(value)
 
     def get_avg(self):
-        return self.queue.sum() / len(self.queue)
+        return sum(self.queue) / len(self.queue)
 
 def download_small_images(card_list: list[card.Card], all_new: bool):
     """
