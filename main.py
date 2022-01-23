@@ -12,9 +12,9 @@ from card import Card
 
 def get_default_cards():
     """
-    Queries scryfall API (https://scryfall.com/docs/api) for current lists of magic cards.
+    Queries Scryfall' REST API (https://scryfall.com/docs/api) for current lists of magic cards.
 
-    :return: str
+    :return (list, str): A list of current cards in the Scryfall database and the date last updated
     """
     response = requests.get("https://api.scryfall.com/bulk-data/default_cards")
 
@@ -50,6 +50,9 @@ def get_default_cards():
 
 
 if __name__ == '__main__':
+    """
+    Gets all current MTG cards on the Scryfall database and writes their data to a csv file
+    """
     cards, date = get_default_cards()
     header = cards[0].get_csv_header()
 
