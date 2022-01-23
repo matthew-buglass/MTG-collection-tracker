@@ -5,6 +5,10 @@
 #  Date: 9/22/21, 5:41 PM
 import json
 
+"""
+Stores the data for a MTG Card
+"""
+
 
 class Card:
     def __init__(self, j:json):
@@ -40,24 +44,39 @@ class Card:
         self.price_etched_usd = j["prices"]["usd_etched"]
 
     def get_csv_line(self) -> str:
+        """
+        Returns a string to be appended as a line in a csv file
+        
+        :return string: csv formated string representation of a card
+        """
         return "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(
             self.name, self.rarity, self.id, self.uri, self.lang, self.super_type, self.type,
             self.sub_type, self.foil, self.nonfoil, self.set_name, self.collector_number, self.artist,
             self.illustration_id, self.booster, self.price_usd, self.price_foil_usd, self.price_etched_usd)
 
     def get_csv_header(self) -> str:
+        """
+        Returns a the header format for a card csv files
+        
+        :return string: csv formated string for a card's header row
+        """
         return "name,rarity,id,uri,lang,super_type,type,sub_type,foil,nonfoil,set_name," \
                "collector_number,artist,illustration_id,booster,price_usd,price_foil_usd," \
                "price_etched_usd\n"
 
     def print_string(self):
+        """
+        Prints a card's data to console
+        """
         print(self.get_csv_line())
 
     @staticmethod
     def split_types(type_line) -> (str, str, str):
         """
         Splits the creature type into super-type, type, and sub-type
+        
         :param type_line: the line type of the creature
+        
         :return: (str, str, str): (super-type, type, sub-type)
         """
         if ("//" in type_line):
